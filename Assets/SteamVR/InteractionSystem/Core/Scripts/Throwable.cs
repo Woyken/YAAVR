@@ -50,7 +50,7 @@ namespace Valve.VR.InteractionSystem
         protected Transform attachEaseInTransform;
 
 		public UnityEvent onPickUp;
-        public UnityEvent onDetachFromHand;
+        public HandEvent onDetachFromHand;
         public HandEvent onHeldUpdate;
 
 
@@ -163,7 +163,7 @@ namespace Valve.VR.InteractionSystem
         {
             attached = false;
 
-            onDetachFromHand.Invoke();
+            onDetachFromHand.Invoke(hand);
 
             hand.HoverUnlock(null);
 
