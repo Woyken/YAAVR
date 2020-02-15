@@ -61,7 +61,7 @@ public class BotRigidbodyNavigator : MonoBehaviour
                 case RagdollState.Ragdoll:
                     {
                         // Disable the navigation agent
-                        if (!navMeshAgent.isStopped)
+                        if (navMeshAgent.isOnNavMesh && !navMeshAgent.isStopped)
                             navMeshAgent.isStopped = true;
                         navMeshAgent.updatePosition = false;
                         navMeshAgent.updateRotation = false;
