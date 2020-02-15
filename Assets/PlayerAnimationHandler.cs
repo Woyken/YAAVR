@@ -10,6 +10,10 @@ public class PlayerAnimationHandler : MonoBehaviour
 
     public Action onAnimatorMoveAction;
  
+    /// <summary>
+    /// Override speed, multiply animation speed by this value.
+    /// Normal speed = 1
+    /// </summary>
     public float MovementSpeedMultiplier
     {
         set
@@ -18,6 +22,10 @@ public class PlayerAnimationHandler : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Movement forward/backward speed from -2 to 2.
+    /// 0-1 walking, 1-2 running
+    /// </summary>
     public float VelocityX
     {
         set
@@ -26,6 +34,10 @@ public class PlayerAnimationHandler : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Movement to side speed from -2 to 2.
+    /// 0-1 walking, 1-2 running
+    /// </summary>
     public float VelocityY
     {
         set
