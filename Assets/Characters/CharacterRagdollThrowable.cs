@@ -54,18 +54,6 @@ public class CharacterRagdollThrowable : MonoBehaviour
                     onRagdollStateChanged?.Invoke(state);
                     break;
             }
-            // Just finished the transition to animation.
-
-            //                animationHandler.GetComponent<Animator>().applyRootMotion = false;
-
-            // We have been dropped off nav mesh.
-            // Try to reatach it to warping to same location as we are right now.
-            // When sliding is implemented, this should only happen after sliding is done.
-            // navMeshAgent.nextPosition = hit.position;
-            // Setting nextPosition doesn't work in this case. nextPosition can only handle moving on navmesh and has to have valid path from 1 point to another.
-            // tried moving between 2 layers on same mesh, didn't work, even though path exists between them
-            // It not only needs a path, also can't be too far. So Warp here is better since it can get us anywhere instantly.
-            // Only thing that it need to be "close enough" to the navmesh, then it "snaps" to it, which might not always look all that great.
         };
     }
 

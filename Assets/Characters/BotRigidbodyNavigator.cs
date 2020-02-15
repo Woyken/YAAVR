@@ -38,6 +38,10 @@ public class BotRigidbodyNavigator : MonoBehaviour
             {
                 case RagdollState.AnimationComplete:
                     {
+                        // Setting nextPosition doesn't work in this case. nextPosition can only handle moving on navmesh and has to have valid path from 1 point to another.
+                        // tried moving between 2 layers on same mesh, didn't work, even though path exists between them
+                        // It not only needs a path, also can't be too far. So Warp here is better since it can get us anywhere instantly.
+                        // Only thing that it need to be "close enough" to the navmesh, then it "snaps" to it, which might not always look all that great.
                         navMeshAgent.updatePosition = true;
                         navMeshAgent.updateRotation = true;
                         navMeshAgent.updateUpAxis = true;
