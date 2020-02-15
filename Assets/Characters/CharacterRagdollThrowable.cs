@@ -1,0 +1,151 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using ExtensionMethods;
+using UnityEngine;
+using Valve.VR.InteractionSystem;
+
+public enum RagdollState
+{
+    Ragdoll,
+    ManualTransition,
+    StandUpAnimation,
+    AnimationComplete,
+}
+
+public class CharacterRagdollThrowable : MonoBehaviour
+{
+    public delegate void RagdollStateChangeEventHandler(RagdollState state);
+    public event RagdollStateChangeEventHandler onRagdollStateChanged;
+
+    public Throwable throwable;
+    public Rigidbody ragdollHipsRb;
+    public Transform ragdollHips;
+    public Animator animator;
+    public RagdollHelper ragdollHelper;
+    [HideInInspector]
+    public RagdollState state = RagdollState.StandUpAnimation;
+    public float ragdollLayOnGroundFor = 2f;
+
+    private new Rigidbody rigidbody;
+    private float canDisableRagdollAt;
+    private bool isPickedUp = false;
+    private bool isStandingUpAnimation = false;
+
+    void Awake()
+    {
+        rigidbody = GetComponent<Rigidbody>();
+
+        throwable.onDetachFromHand.AddListener(OnHandRelease);
+        throwable.onPickUp.AddListener(OnHandPickup);
+        ragdollHelper.onStateChanged += (s) =>
+        {
+            switch (s)
+            {
+                case RagdollHelper.RagdollState.animated:
+                    state = RagdollState.StandUpAnimation;
+                    onRagdollStateChanged?.Invoke(state);
+                    break;
+                case RagdollHelper.RagdollState.blendToAnim:
+                    state = RagdollState.ManualTransition;
+                    onRagdollStateChanged?.Invoke(state);
+                    break;
+                case RagdollHelper.RagdollState.ragdolled:
+                    state = RagdollState.Ragdoll;
+                    onRagdollStateChanged?.Invoke(state);
+                    break;
+            }
+            // Just finished the transition to animation.
+
+            //                animationHandler.GetComponent<Animator>().applyRootMotion = false;
+
+            // We have been dropped off nav mesh.
+            // Try to reatach it to warping to same location as we are right now.
+            // When sliding is implemented, this should only happen after sliding is done.
+            // navMeshAgent.nextPosition = hit.position;
+            // Setting nextPosition doesn't work in this case. nextPosition can only handle moving on navmesh and has to have valid path from 1 point to another.
+            // tried moving between 2 layers on same mesh, didn't work, even though path exists between them
+            // It not only needs a path, also can't be too far. So Warp here is better since it can get us anywhere instantly.
+            // Only thing that it need to be "close enough" to the navmesh, then it "snaps" to it, which might not always look all that great.
+        };
+    }
+
+    void Start()
+    {
+
+    }
+
+    void Update()
+    {
+        if (this.state == RagdollState.StandUpAnimation)
+        {
+            // Another dirty hack.
+            // Detecting when standing up animation is complete. 
+            // Should probably use regular animation events. Although I can't be sure that it will be sent for sure.
+            var animationName = animator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
+            if (animationName != "stand_up_from_back_3" && animationName != "standing_up_from_belly_2")
+            {
+                this.state = RagdollState.AnimationComplete;
+                onRagdollStateChanged?.Invoke(state);
+            }
+        }
+
+        HandleRagdollDisabling();
+    }
+
+    void HandleRagdollDisabling()
+    {
+        if (!isPickedUp && state == RagdollState.Ragdoll)
+        {
+            if (ragdollHipsRb.velocity.magnitude >= 0.05)
+            {
+                canDisableRagdollAt = Time.time + ragdollLayOnGroundFor;
+            }
+            else
+            {
+                if (canDisableRagdollAt > Time.time)
+                {
+                    return;
+                }
+                // Hack. We need to reset the rotation of character. After released from hand, might not be facing up.
+                // Detach Hips, rotate parent, reatach hips.
+                // This way we fix rotation ofthe whole object without moving the ragdoll itself.
+                if (ragdollHips.parent != null)
+                {
+                    var originalParent = ragdollHips.parent;
+                    ragdollHips.parent = null;
+                    transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.WithX(0).WithZ(0));
+                    ragdollHips.parent = originalParent;
+                }
+
+                rigidbody.isKinematic = true;
+                ragdollHelper.ragdolled = false;
+                return;
+            }
+        }
+    }
+
+    public void OnHandPickup()
+    {
+        ragdollHelper.ragdolled = true;
+        ragdollHipsRb.isKinematic = true;
+        isPickedUp = true;
+    }
+
+    public void OnHandRelease(Hand hand)
+    {
+        // Might not be nescessary after sliding after thrown is implemented. Then it would be called after sliding is done.
+        // Set navigator current position to current body location.
+        // This can be off navigation mesh. This means navigator won't work at all.
+        // Will need to be "Warped" again to valid location on nav mesh
+        // navMeshAgent.Warp(rb.position);
+
+        // Enable rigidbody physics
+        ragdollHipsRb.isKinematic = false;
+        rigidbody.isKinematic = false;
+        throwable.GetReleaseVelocities(hand, out Vector3 velocity, out Vector3 angularVelocity);
+
+        ragdollHipsRb.velocity = velocity;
+        ragdollHipsRb.angularVelocity = angularVelocity;
+        isPickedUp = false;
+    }
+}

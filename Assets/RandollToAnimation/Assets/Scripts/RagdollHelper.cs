@@ -44,7 +44,7 @@ public class RagdollHelper : MonoBehaviour
         {
             if (value == true)
             {
-                if (state == RagdollState.animated)
+                if (state == RagdollState.animated || state == RagdollState.blendToAnim)
                 {
                     //Transition from animated to ragdolled
                     setKinematic(false); //allow the ragdoll RigidBodies to react to the environment
