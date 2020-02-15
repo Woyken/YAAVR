@@ -14,6 +14,7 @@ public class BotRigidbodyNavigator : MonoBehaviour
     public float waitAfterWalkToTargetMin = 0f;
 
     public float waitAfterWalkToTargetMax = 10f;
+    public PlayerAnimationHandler animationHandler;
 
     private float restartMovingAt = 0f;
     private float lastTimeInputReceived = 0f;
@@ -41,8 +42,16 @@ public class BotRigidbodyNavigator : MonoBehaviour
         {
             return;
         }
-        if (navMeshAgent.isOnNavMesh)
-            rb.isKinematic = true;
+        if (navMeshAgent.isOnNavMesh) {
+            // Since agent is on ground, update our animator with current speed values.
+            var localVelocity = transform.InverseTransformDirection(navMeshAgent.velocity);
+            localVelocity.y = 0f;
+            localVelocity.Normalize();
+            animationHandler.MovementSpeedMultiplier = navMeshAgent.velocity.WithY(0).magnitude / navMeshAgent.speed;
+            animationHandler.VelocityX = localVelocity.x;
+            animationHandler.VelocityY = localVelocity.z;
+        }
+            // rb.isKinematic = true;
 
         if (!navMeshAgent.isOnNavMesh)
         {

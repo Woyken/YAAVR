@@ -2217,6 +2217,7 @@ GameObject:
   - component: {fileID: 8204994602030662456}
   - component: {fileID: 2258551776885976642}
   - component: {fileID: 4318321412309775024}
+  - component: {fileID: 1929351415145132649}
   m_Layer: 0
   m_Name: xbot with ragdoll
   m_TagString: Untagged
@@ -2272,6 +2273,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66588656d9cbccf4fb847483cf7c5b61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1929351415145132649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5153990195885895979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e736816a2cae03449287c195d7f0f1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ragdollToMecanimBlendTime: 0.5
 --- !u!1 &5169868495739340110
 GameObject:
   m_ObjectHideFlags: 0
