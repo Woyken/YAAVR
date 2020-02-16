@@ -18,7 +18,7 @@ public class CannonScript : MonoBehaviour
     private int ballSpawnIndex;
     private CannonBall[] cannonBalls;
 
-    PlayerControls playerControlling = null;
+    PlayerMovementAgent playerControlling = null;
 
     private GameObject shotBy;
 
@@ -75,7 +75,7 @@ public class CannonScript : MonoBehaviour
         }
     }
 
-    public void Interact(PlayerControls player)
+    public void Interact(PlayerMovementAgent player)
     {
         if (playerControlling != null)
         {

@@ -10,6 +10,7 @@ public class CharacterLook : MonoBehaviour
     new public Camera camera;
     public Transform body;
     public float sensitivity = 100f;
+    public bool isEnabled = true;
 
     [HideInInspector]
     public Vector2 inputLook = new Vector2(0f, 0f);
@@ -28,6 +29,10 @@ public class CharacterLook : MonoBehaviour
 
     void Update()
     {
+        if (!isEnabled)
+        {
+            return;
+        }
         var lookDiff = inputLook * sensitivity * Time.deltaTime;
 
         yRotation -= lookDiff.y;
