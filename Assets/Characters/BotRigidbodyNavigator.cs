@@ -23,15 +23,6 @@ public class BotRigidbodyNavigator : MonoBehaviour
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
 
-        Collider collider1 = GetComponent<Collider>();
-        if (collider1 != null)
-        {
-            foreach (Collider child in GetComponentsInChildren<Collider>())
-            {
-                Physics.IgnoreCollision(collider1, child);
-            }
-        }
-
         characterThrowable.onRagdollStateChanged += (s) =>
         {
             switch (s)

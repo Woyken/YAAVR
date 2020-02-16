@@ -55,6 +55,15 @@ public class CharacterRagdollThrowable : MonoBehaviour
                     break;
             }
         };
+
+        Collider collider1 = GetComponent<Collider>();
+        if (collider1 != null)
+        {
+            foreach (Collider child in GetComponentsInChildren<Collider>())
+            {
+                Physics.IgnoreCollision(collider1, child);
+            }
+        }
     }
 
     void Start()
