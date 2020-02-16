@@ -56,6 +56,10 @@ public class CharacterRagdollThrowable : MonoBehaviour
             }
         };
 
+        // Disable collisions for all child colliders.
+        // We have to have collider on parent as well as for the whole ragdoll.
+        // Otherwise ragdoll will fall "away" from parent element.
+        // Recovering from that is really hard, we would have to figure out base location from the ragdoll.
         Collider collider1 = GetComponent<Collider>();
         if (collider1 != null)
         {
