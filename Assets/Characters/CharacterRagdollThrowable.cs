@@ -20,10 +20,11 @@ public class CharacterRagdollThrowable : MonoBehaviour
     public Throwable throwable;
     public Rigidbody ragdollHipsRb;
     public Transform ragdollHips;
+    public Joint jointToHips;
     public Animator animator;
     public RagdollHelper ragdollHelper;
     [HideInInspector]
-    public RagdollState state = RagdollState.StandUpAnimation;
+    public RagdollState state = RagdollState.AnimationComplete;
     public float ragdollLayOnGroundFor = 2f;
 
     private new Rigidbody rigidbody;
@@ -33,6 +34,8 @@ public class CharacterRagdollThrowable : MonoBehaviour
 
     void Awake()
     {
+        state = RagdollState.AnimationComplete;
+
         rigidbody = GetComponent<Rigidbody>();
 
         throwable.onDetachFromHand.AddListener(OnHandRelease);
@@ -70,9 +73,20 @@ public class CharacterRagdollThrowable : MonoBehaviour
         }
     }
 
+    /// Disabling hips object completely, this allows us to save some performace
+    void SetActiveRagdoll(bool value)
+    {
+        ragdollHips.gameObject.SetActive(value);
+        if (value)
+        {
+            // Connected joints stop working after hips get re-enabled. Reassign it
+            jointToHips.connectedBody = ragdollHipsRb;
+        }
+    }
+
     void Start()
     {
-        ragdollHips.gameObject.SetActive(false);
+        SetActiveRagdoll(false);
     }
 
     void Update()
@@ -85,7 +99,7 @@ public class CharacterRagdollThrowable : MonoBehaviour
             var animationName = animator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
             if (animationName != "stand_up_from_back_3" && animationName != "standing_up_from_belly_2")
             {
-                ragdollHips.gameObject.SetActive(false);
+                SetActiveRagdoll(false);
                 this.state = RagdollState.AnimationComplete;
                 onRagdollStateChanged?.Invoke(state);
             }
@@ -128,7 +142,7 @@ public class CharacterRagdollThrowable : MonoBehaviour
 
     public void OnHandPickup()
     {
-        ragdollHips.gameObject.SetActive(true);
+        SetActiveRagdoll(true);
 
         ragdollHelper.ragdolled = true;
         ragdollHipsRb.isKinematic = true;
