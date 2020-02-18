@@ -72,7 +72,7 @@ public class CharacterRagdollThrowable : MonoBehaviour
 
     void Start()
     {
-
+        ragdollHips.gameObject.SetActive(false);
     }
 
     void Update()
@@ -85,6 +85,7 @@ public class CharacterRagdollThrowable : MonoBehaviour
             var animationName = animator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
             if (animationName != "stand_up_from_back_3" && animationName != "standing_up_from_belly_2")
             {
+                ragdollHips.gameObject.SetActive(false);
                 this.state = RagdollState.AnimationComplete;
                 onRagdollStateChanged?.Invoke(state);
             }
@@ -127,6 +128,8 @@ public class CharacterRagdollThrowable : MonoBehaviour
 
     public void OnHandPickup()
     {
+        ragdollHips.gameObject.SetActive(true);
+
         ragdollHelper.ragdolled = true;
         ragdollHipsRb.isKinematic = true;
         isPickedUp = true;
