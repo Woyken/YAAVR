@@ -174,6 +174,11 @@ public class PlayerMovementAgent : MonoBehaviour
                     currentlyInteracting = interactable;
                     // TODO add some animations
                 }
+                var expl = interactedObject.GetComponent<ObjectiveExplode>();
+                if (expl != null)
+                {
+                    expl.Activate();
+                }
             }
         }
         else if (overlay.gameObject.activeSelf)
