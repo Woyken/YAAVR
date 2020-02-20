@@ -51,6 +51,7 @@ public class ObjectiveExplode : MonoBehaviour
     {
         if (status == Status.Normal)
         {
+            GetComponent<Collider>().enabled = false;
             normal.Stop();
             unstable.Play();
             status = Status.Unstable;
