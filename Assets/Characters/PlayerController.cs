@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
 
     void MoveAnimation()
     {
-        animationHandler.MovementSpeedMultiplier = movementAgent.GetComponent<Rigidbody>().velocity.WithY(0).magnitude * animationOverdriveMultiplier / (movementAgent.characterMove.inputIsSprinting ? 2 : 1);
+        animationHandler.MovementSpeedMultiplier = movementAgent.velocity.WithY(0).magnitude * animationOverdriveMultiplier / (movementAgent.characterMove.inputIsSprinting ? 2 : 1);
         animationHandler.VelocityX = movementAgent.characterMove.inputMove.x * (movementAgent.characterMove.inputIsSprinting ? 2 : 1);
         animationHandler.VelocityY = movementAgent.characterMove.inputMove.y * (movementAgent.characterMove.inputIsSprinting ? 2 : 1);
     }

@@ -12,7 +12,6 @@ using UnityEngine;
 // It will act similarly to navmeshagent.
 // But instead of purely internal position calculations, I'll have different GameObject for player movements, and the body will just follow it
 // Having it as parent object and detaching on start at the moment seems like a viable solution
-[RequireComponent(typeof(Rigidbody))]
 public class PlayerMovementAgent : MonoBehaviour
 {
     public Camera playerCamera;
@@ -36,8 +35,7 @@ public class PlayerMovementAgent : MonoBehaviour
     public Transform headPositionAndRotation { get => playerCamera.transform; }
     [HideInInspector]
     public CannonScript currentlyInteracting = null;
-
-    new private Rigidbody rigidbody;
+    public Vector3 velocity { get => characterMove.velocity; }
 
     private float inputInteract = 0f;
 
@@ -115,9 +113,6 @@ public class PlayerMovementAgent : MonoBehaviour
 
     void Awake()
     {
-        rigidbody = GetComponent<Rigidbody>();
-        rigidbody.maxAngularVelocity = 0;
-
         Collider collider1 = GetComponent<Collider>();
         if (collider1 != null)
         {

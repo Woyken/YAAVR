@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class CharacterMove : MonoBehaviour
 {
-    new public Rigidbody rigidbody;
+    new private Rigidbody rigidbody = null;
+    public CharacterController characterController = null;
 
     public bool canJump = true;
     public bool canRun = true;
@@ -19,6 +20,12 @@ public class CharacterMove : MonoBehaviour
     public float inputJump = 0f;
     //[HideInInspector]
     public Vector2 inputMove = new Vector2(0f, 0f);
+    public Vector3 velocity
+    {
+        get => rigidbody?.velocity ?? characterController.velocity;
+    }
+
+    private bool grounded = false;
 
     void Awake()
     {
@@ -30,7 +37,7 @@ public class CharacterMove : MonoBehaviour
 
     }
 
-    void Update()
+    void UpdateForRigidbody()
     {
         var finalMoveSpeed = moveSpeed * (inputIsSprinting ? sprintMultiplier : 1);
         var moveIn = inputMove * finalMoveSpeed;
@@ -42,18 +49,49 @@ public class CharacterMove : MonoBehaviour
         //characterController.Move(velocity * Time.deltaTime);
 
         float distanceToTheGround = GetComponent<Collider>().bounds.extents.y;
-        bool isGrounded = Physics.Raycast(transform.position, Vector3.down, distanceToTheGround + 0.1f);
+        grounded = Physics.Raycast(transform.position, Vector3.down, distanceToTheGround + 0.1f);
 
-        if (isGrounded && inputJump > 0f && rigidbody.velocity.y < 0.00001)
+        if (grounded && inputJump > 0f && rigidbody.velocity.y < 0.00001)
         {
             move.y += Mathf.Sqrt(jumpHeight * -1f * Physics.gravity.y);
         }
-        if(move.sqrMagnitude == 0) {
+        if (move.sqrMagnitude == 0)
+        {
             return;
         }
         // Don't loose current falling velocity.
         move.y += rigidbody.velocity.y;
 
         rigidbody.velocity = move;
+    }
+
+    void UpdateForCC()
+    {
+        var finalMoveSpeed = moveSpeed * (inputIsSprinting ? sprintMultiplier : 1);
+        var moveIn = inputMove * finalMoveSpeed;
+
+        var move = transform.right * moveIn.x + transform.forward * moveIn.y;
+
+        move += Physics.gravity;
+
+        if (grounded && inputJump > 0f && characterController.velocity.y < 0.00001)
+        {
+            move.y += Mathf.Sqrt(jumpHeight * -1f * Physics.gravity.y);
+        }
+
+        characterController.SimpleMove(move * Time.deltaTime);
+        grounded = characterController.isGrounded;
+    }
+
+    void Update()
+    {
+        if (rigidbody != null)
+        {
+            UpdateForRigidbody();
+        }
+        else
+        {
+            UpdateForCC();
+        }
     }
 }
