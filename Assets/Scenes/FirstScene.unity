@@ -15739,7 +15739,17 @@ PrefabInstance:
     - target: {fileID: 2607337034895417473, guid: c85202e0cf910d945a2577c9a58ce9f0,
         type: 3}
       propertyPath: moveSpeed
-      value: 5.5
+      value: 0.125
+      objectReference: {fileID: 0}
+    - target: {fileID: 2607337034895417473, guid: c85202e0cf910d945a2577c9a58ce9f0,
+        type: 3}
+      propertyPath: jumpHeight
+      value: 0.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 2607337034895417473, guid: c85202e0cf910d945a2577c9a58ce9f0,
+        type: 3}
+      propertyPath: maxJumpDuration
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 2607337034895417475, guid: c85202e0cf910d945a2577c9a58ce9f0,
         type: 3}
