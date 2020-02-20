@@ -21,6 +21,8 @@ public class PlayerMovementAgent : MonoBehaviour
     public CharacterLook characterLook;
     public CharacterMove characterMove;
 
+    public float activationDistance = 1f;
+
     public bool shouldControlMovePlayer = true;
     public bool shouldControlTurnCamera
     {
@@ -151,7 +153,7 @@ public class PlayerMovementAgent : MonoBehaviour
             return;
         }
         LayerMask interactableLayer = LayerMask.GetMask("Interactable");
-        if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit interactionInfo, 20f, interactableLayer))
+        if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit interactionInfo, activationDistance, interactableLayer))
         {
             // Something interactable is in front.
             GameObject interactedObject = interactionInfo.collider.gameObject;
