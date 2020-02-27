@@ -3355,7 +3355,6 @@ MonoBehaviour:
   yForceDirection: -1
   zForceDirection: 0
   speedMultiplier: 0.3
-  worldPivote: 0
 --- !u!4 &425722208
 Transform:
   m_ObjectHideFlags: 0
