@@ -16,6 +16,8 @@ public class ObjectiveExplode : MonoBehaviour
     public VisualEffect normal;
     public VisualEffect unstable;
     public VisualEffect explosion;
+    public GameObject brokenVersion;
+    public GameObject originalObject;
 
     private float activatedAt = 0f;
 
