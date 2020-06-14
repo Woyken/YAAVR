@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using ExtensionMethods;
 using UnityEngine;
@@ -65,10 +65,6 @@ public class BotRigidbodyNavigator : MonoBehaviour
     }
 
     void Start()
-    {
-    }
-
-    void FixedUpdate()
     {
     }
 
