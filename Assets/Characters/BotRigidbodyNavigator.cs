@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using ExtensionMethods;
 using UnityEngine;
@@ -70,16 +70,7 @@ public class BotRigidbodyNavigator : MonoBehaviour
 
     void Update()
     {
-        if (navMeshAgent.isActiveAndEnabled)
-        {
-            // Since agent is active, update our animator with current speed values.
-            var localVelocity = transform.InverseTransformDirection(navMeshAgent.velocity);
-            localVelocity.y = 0f;
-            localVelocity.Normalize();
-            animationHandler.MovementSpeedMultiplier = navMeshAgent.velocity.WithY(0).magnitude / navMeshAgent.speed;
-            animationHandler.VelocityX = localVelocity.x;
-            animationHandler.VelocityY = localVelocity.z;
-        }
+        UpdateAnimations();
 
         // Check if we've reached the destination
         if (navMeshAgent.isOnNavMesh && !navMeshAgent.pathPending)
@@ -92,6 +83,20 @@ public class BotRigidbodyNavigator : MonoBehaviour
                     SetNewDestination();
                 }
             }
+        }
+    }
+
+    void UpdateAnimations()
+    {
+        if (navMeshAgent.isActiveAndEnabled)
+        {
+            // Since agent is active, update our animator with current speed values.
+            var localVelocity = transform.InverseTransformDirection(navMeshAgent.velocity);
+            localVelocity.y = 0f;
+            localVelocity.Normalize();
+            animationHandler.MovementSpeedMultiplier = navMeshAgent.velocity.WithY(0).magnitude / navMeshAgent.speed;
+            animationHandler.VelocityX = localVelocity.x;
+            animationHandler.VelocityY = localVelocity.z;
         }
     }
 
@@ -129,17 +134,17 @@ public class BotRigidbodyNavigator : MonoBehaviour
         return finalPosition;
     }
 
-     Vector3 GetRandomLocation()
-     {
-         NavMeshTriangulation navMeshData = NavMesh.CalculateTriangulation();
- 
-         // Pick the first indice of a random triangle in the nav mesh
+    Vector3 GetRandomLocation()
+    {
+        NavMeshTriangulation navMeshData = NavMesh.CalculateTriangulation();
+
+        // Pick the first indice of a random triangle in the nav mesh
         int t = Random.Range(0, navMeshData.indices.Length - 3);
-         
-         // Select a random point on it
+
+        // Select a random point on it
         Vector3 point = Vector3.Lerp(navMeshData.vertices[navMeshData.indices[t]], navMeshData.vertices[navMeshData.indices[t + 1]], Random.value);
         Vector3.Lerp(point, navMeshData.vertices[navMeshData.indices[t + 2]], Random.value);
- 
-         return point;
-     }
+
+        return point;
+    }
 }
