@@ -9,7 +9,9 @@ public class PlayerAnimationHandler : MonoBehaviour
     private Animator animator;
 
     public Action onAnimatorMoveAction;
- 
+    public delegate void OnAnimatorIKDelegate(Animator animator);
+    public event OnAnimatorIKDelegate onAnimatorIK;
+
     /// <summary>
     /// Override speed, multiply animation speed by this value.
     /// Normal speed = 1
@@ -54,5 +56,11 @@ public class PlayerAnimationHandler : MonoBehaviour
     void OnAnimatorMove()
     {
         onAnimatorMoveAction?.Invoke();
+    }
+
+    // called by the Animator Component immediately before it updates its internal IK system
+    void OnAnimatorIK(int layerIndex)
+    {
+        onAnimatorIK?.Invoke(animator);
     }
 }

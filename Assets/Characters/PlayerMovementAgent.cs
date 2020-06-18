@@ -14,6 +14,7 @@ using UnityEngine;
 // Having it as parent object and detaching on start at the moment seems like a viable solution
 public class PlayerMovementAgent : MonoBehaviour
 {
+    public PistolShooter heldItem;
     public Camera playerCamera;
     public PlayerOverlay overlay;
     public Transform playerRoot;
@@ -89,6 +90,24 @@ public class PlayerMovementAgent : MonoBehaviour
             return;
         }
         inputInteract = value.Get<float>();
+    }
+
+    public void OnUseItem(UnityEngine.InputSystem.InputValue value)
+    {
+        if (!isEnabled)
+            return;
+
+        if (value.Get<float>() > 0){
+
+            var ray = playerCamera.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
+            var layerMask = ~LayerMask.GetMask("Player");
+            if (Physics.Raycast(ray, out var hit, layerMask)) {
+                heldItem.Shoot(hit.point);
+            } else {
+                // fallback to 20 meters away
+                heldItem.Shoot(ray.GetPoint(20));
+            }
+        }
     }
 
     public void OnJump(UnityEngine.InputSystem.InputValue value)

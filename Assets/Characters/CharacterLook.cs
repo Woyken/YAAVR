@@ -9,7 +9,7 @@ public class CharacterLook : MonoBehaviour
     [Tooltip("Camera to controll, can be left empty if not needed.")]
     new public Camera camera;
     public Transform body;
-    public float sensitivity = 100f;
+    public float sensitivity = 10f;
     public bool isEnabled = true;
 
     [HideInInspector]
@@ -33,29 +33,7 @@ public class CharacterLook : MonoBehaviour
         {
             return;
         }
-        var lookDiff = inputLook * sensitivity * Time.deltaTime;
-
-        yRotation -= lookDiff.y;
-        yRotation = Mathf.Clamp(yRotation, -90f, 90f);
-
-        if (Mathf.Abs(lookDiff.x) > 0)
-        {
-            body.Rotate(Vector3.up, lookDiff.x);
-        }
-
-        if (camera == null)
-        {
-            return;
-        }
-
-        if (camera.transform.parent == null)
-        {
-            camera.transform.rotation = body.rotation;
-            camera.transform.eulerAngles = camera.transform.eulerAngles.WithX(yRotation);
-        }
-        else
-        {
-            camera.transform.localRotation = Quaternion.Euler(yRotation, 0f, 0f);
-        }
+        var targetDirection = camera.transform.forward.WithY(0);
+        body.rotation = Quaternion.LookRotation(targetDirection);
     }
 }

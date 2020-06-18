@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Interactable
+  - Wood
+  - Metal
+  - Stone
+  - Flesh
+  - Arrow
   layers:
   - Default
   - TransparentFX
@@ -15,7 +20,7 @@ TagManager:
   - 
   - 
   - Interactable
-  - 
+  - Player
   - 
   - 
   - 
